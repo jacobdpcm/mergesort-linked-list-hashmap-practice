@@ -48,7 +48,7 @@ function newNode(nodeValue = null){
     return {value, nextNode}
 }
 
-const LinkedList = (function(){
+function newList(){
     let head = null;
     let tail = null;
     let size = 0;
@@ -146,7 +146,7 @@ const LinkedList = (function(){
     const getSize = () => {return size};
     
     return {append, prepend, getSize, getHead, getTail, at, pop, contains, find, toString}
-})();
+};
     
 //--------------------------------------------------------------------------------------------------
 //--------------------------------------------------------------------------------------------------
@@ -154,3 +154,124 @@ const LinkedList = (function(){
 //--------------------------------------------------------------------------------------------------
 
 //Hash Map Practice:
+
+function HashMap(){
+    let buckets = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]; //16 initial buckets
+    let size = 0;
+
+    const hash = (key) => {
+        let hashCode = 0;
+        const primeNumber = 31;
+        for(let i = 0; i < key.length; i++){
+            hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % buckets.length;
+        }
+        return hashCode;
+    }
+
+    const set = (key, value) => {
+        const index = hash(key);
+        const bucket = buckets[index];
+        //update value:
+        for(let i=0;i<bucket.length; i++){
+            if(bucket[i][0] === key){
+                bucket[i][1] = value;
+                return;
+            }
+        }
+
+        //or create new one:
+        bucket.push([key, value]);
+        size++;
+    }
+
+    const get = (key) => {
+        const index = hash(key);
+        const bucket = buckets[index];
+        for(let i=0; i<bucket.length; i++){
+            if(bucket[i][0] === key) return bucket[i][1];
+        }
+        return null;
+    }
+
+    const has = (key) => {
+        const index = hash(key);
+        const bucket = buckets[index];
+        for(let i=0; i<bucket.length; i++){
+            if(bucket[i][0] === key) return true;
+        }
+        return false;
+    }
+
+    const remove = (key) => {
+        const index = hash(key);
+        const bucket = buckets[index];
+        for(let i=0; i<bucket.length; i++){
+            if(bucket[i][0] === key) {
+                bucket.splice(i, 1);
+                size--;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    const length = () => {
+        let keyTotal = 0;
+        buckets.forEach(bucket => {keyTotal += bucket.length});
+        return keyTotal;
+    }
+
+    const clear = () => {
+        buckets = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []];
+        size = 0;
+    }
+
+    const keys = () => {
+        let array = [];
+        buckets.forEach(bucket => {
+            for(let i=0; i<bucket.length; i++){
+                array.push(bucket[i][0]);
+            }
+        })
+        return array;
+    }
+
+    const values = () => {
+        let array = [];
+        buckets.forEach(bucket => {
+            for(let i=0; i<bucket.length; i++){
+                array.push(bucket[i][1]);
+            }
+        })
+        return array;
+    }
+
+    const entries = () => {
+        let array = [];
+        buckets.forEach(bucket => {
+            for(let i=0; i<bucket.length; i++){
+                array.push(bucket[i]);
+            }
+        })
+        return array;
+    }
+
+    return {set, get, has, remove, length, clear, keys, values, entries}
+};
+
+const test = HashMap();
+
+test.set('apple', 'red');
+test.set('banana', 'yellow');
+test.set('carrot', 'orange');
+test.set('dog', 'brown');
+test.set('elephant', 'gray');
+test.set('frog', 'green');
+test.set('grape', 'purple');
+test.set('hat', 'black');
+test.set('ice cream', 'white');
+test.set('jacket', 'blue');
+test.set('kite', 'pink');
+test.set('lion', 'golden');
+
+
